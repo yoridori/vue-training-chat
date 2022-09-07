@@ -68,19 +68,21 @@
 </template>
 
 <script>
+import { getFirebaseData } from "@/firebase/firebase";
+
 export default {
-  created: function () {
+  async created() {
     this.user_id = this.$route.query.user_id
     console.log("user_id: " + this.user_id)
+    const querySnapshot = await getFirebaseData("chats")
+    querySnapshot.forEach((doc) => {
+
+      console.log("doc", doc.data())
+      this.messages.push(doc.data())
+    })
   },
   data: () => ({
     messages: [
-      {message: "message 1"},
-      {message: "message 2"},
-      {message: "message 3"},
-      {message: "message 4"},
-      {message: "message 5"},
-
     ],
     body: '',
     user_id: '',
