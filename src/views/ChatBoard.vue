@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-
+    <MainSidebar/>
     <v-main>
       <v-container
           class="py-8 px-6"
@@ -69,8 +69,11 @@
 
 <script>
 import { getFirebaseData } from "@/firebase/firebase";
-
+import MainSidebar from "@/components/layouts/MainSidebar";
 export default {
+  components: {
+    MainSidebar,
+  },
   async created() {
     this.user_id = this.$route.query.user_id
     console.log("user_id: " + this.user_id)
