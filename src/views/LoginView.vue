@@ -1,64 +1,46 @@
 <template>
   <v-app>
-    <v-form
-        ref="form"
-        v-model="valid"
-        lazy-validation
-    >
-      <v-text-field
-          v-model="name"
-          :counter="10"
-          :rules="nameRules"
-          label="Name"
-          required
-      ></v-text-field>
-
-      <v-text-field
-          v-model="email"
-          :rules="emailRules"
-          label="E-mail"
-          required
-      ></v-text-field>
-
-      <v-select
-          v-model="select"
-          :items="items"
-          :rules="[v => !!v || 'Item is required']"
-          label="Item"
-          required
-      ></v-select>
-
-      <v-checkbox
-          v-model="checkbox"
-          :rules="[v => !!v || 'You must agree to continue!']"
-          label="Do you agree?"
-          required
-      ></v-checkbox>
-
-      <v-btn
-          :disabled="!valid"
-          color="success"
-          class="mr-4"
-          @click="validate"
+    <div class="login-box">
+      <v-card
+        elevation="24"
+        class="login-form"
       >
-        Validate
-      </v-btn>
+        <v-card-title class="login-title">Login</v-card-title>
+        <v-card-subtitle class="login-subtitle">ユーザー情報をご入力ください</v-card-subtitle>
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
+          <v-text-field
+            v-model="email"
+            :rules="emailRules"
+            label="E-mail"
+            required
+          ></v-text-field>
 
-      <v-btn
-          color="error"
-          class="mr-4"
-          @click="reset"
-      >
-        Reset Form
-      </v-btn>
+          <v-text-field
+            v-model="password"
+            type="password"
+            :rules="passwordRules"
+            label="Password"
+            required
+          ></v-text-field>
 
-      <v-btn
-          color="warning"
-          @click="resetValidation"
-      >
-        Reset Validation
-      </v-btn>
-    </v-form>
+          <v-btn
+            color="success"
+            class="login-btn"
+          >
+            LOGIN
+          </v-btn>
+
+          <v-btn>
+            CLEAR
+          </v-btn>
+
+        </v-form>
+      </v-card>
+    </div>
   </v-app>
 </template>
 
@@ -66,24 +48,16 @@
 export default {
   data: () => ({
     valid: true,
-    name: '',
-    nameRules: [
-      v => !!v || 'Name is required',
-      v => (v && v.length <= 10) || 'Name must be less than 10 characters',
-    ],
     email: '',
     emailRules: [
       v => !!v || 'E-mail is required',
       v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
     ],
-    select: null,
-    items: [
-      'Item 1',
-      'Item 2',
-      'Item 3',
-      'Item 4',
-    ],
-    checkbox: false,
+    password: '',
+    passwordRules: [
+      // 二重否定は正確にbooleanの型にする
+      v => !!v || 'Password is required',
+    ]
   }),
 
   methods: {
@@ -99,3 +73,24 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.login-form {
+  margin: 150px;
+  padding: 30px;
+}
+
+.login-box {
+  width: 75%;
+  margin: 0px auto;
+  padding: 30px;
+}
+
+.login-title {
+  display: inline-block;
+}
+
+.login-btn {
+  margin-right: 20px;
+}
+</style>
