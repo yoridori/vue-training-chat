@@ -30,11 +30,13 @@
           <v-btn
             color="success"
             class="login-btn"
+            :disabled="isValid"
           >
             LOGIN
           </v-btn>
 
-          <v-btn>
+          <v-btn
+            @click="clear">
             CLEAR
           </v-btn>
 
@@ -50,16 +52,20 @@ export default {
     valid: true,
     email: '',
     emailRules: [
-      v => !!v || 'E-mail is required',
-      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      v => !!v || 'メールアドレスを入力してください',
+      v => /.+@.+\..+/.test(v) || '不正なメールアドレスです',
     ],
     password: '',
     passwordRules: [
       // 二重否定は正確にbooleanの型にする
-      v => !!v || 'Password is required',
+      v => !!v || 'パスワードを入力してください',
     ]
   }),
-
+  computed: {
+    isValid() {
+      return !this.valid
+    },
+  },
   methods: {
     validate() {
       this.$refs.form.validate()
@@ -69,6 +75,10 @@ export default {
     },
     resetValidation() {
       this.$refs.form.resetValidation()
+    },
+    clear() {
+      this.email = ''
+      this.password = ''
     },
   },
 }
