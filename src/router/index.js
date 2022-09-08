@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
 import UserList from "@/views/UserList";
 import ChatBoard from "@/views/ChatBoard";
-
+import LoginView from "@/views/LoginView";
 Vue.use(VueRouter)
 
 const routes = [
@@ -24,6 +24,11 @@ const routes = [
     path: '/chat',
     name: 'ChatBoard',
     component: ChatBoard
+  },
+  {
+    path: '/login',
+    name: 'LoginView',
+    component: LoginView
   },
 ]
 
