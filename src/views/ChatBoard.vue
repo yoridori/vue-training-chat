@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { getFirebaseData } from "@/firebase/firebase";
+import { getFirebaseData } from "@/firebase/Db";
 import MainSidebar from "@/components/layouts/MainSidebar";
 export default {
   components: {

@@ -1,18 +1,25 @@
 <template>
   <v-app>
-    <div class="login-box">
+    <div class="sign-up-box">
       <v-card
         elevation="24"
-        class="login-form"
+        class="sign-up-form"
       >
-        <v-card-title class="login-title">Login</v-card-title>
-        <v-card-subtitle class="login-subtitle">ユーザー情報をご入力ください</v-card-subtitle>
-        <v-btn text color="light-blue" to="signup">新規登録はこちら</v-btn>
+        <v-card-title class="sign-up-title">SignUp</v-card-title>
+        <v-card-subtitle class="sign-up-subtitle">ユーザー情報をご入力ください</v-card-subtitle>
+        <v-btn text color="light-blue" to="login">ログインはこちら</v-btn>
         <v-form
           ref="form"
           v-model="valid"
           lazy-validation
         >
+          <v-text-field
+            v-model="name"
+            :rules="nameRules"
+            label="UserName"
+            required
+          ></v-text-field>
+
           <v-text-field
             v-model="email"
             :rules="emailRules"
@@ -30,10 +37,11 @@
 
           <v-btn
             color="success"
-            class="login-btn"
+            class="sign-up-btn"
+            @click="submit"
             :disabled="isValid"
           >
-            LOGIN
+            SIGN UP
           </v-btn>
 
           <v-btn
@@ -48,9 +56,15 @@
 </template>
 
 <script>
+import {signUp} from "@/firebase/UserCreate";
 export default {
   data: () => ({
     valid: true,
+    name: '',
+    nameRules: [
+      v => !!v || 'ユーザー名を入力してください',
+      v => (v && v.length <= 10) || 'ユーザー名は10文字以内で入力してください',
+    ],
     email: '',
     emailRules: [
       v => !!v || 'メールアドレスを入力してください',
@@ -77,6 +91,9 @@ export default {
     resetValidation() {
       this.$refs.form.resetValidation()
     },
+    submit() {
+      signUp(this.name, this.email, this.password)
+    },
     clear() {
       this.email = ''
       this.password = ''
@@ -86,22 +103,22 @@ export default {
 </script>
 
 <style scoped>
-.login-form {
+.sign-up-form {
   margin: 150px;
   padding: 30px;
 }
 
-.login-box {
+.sign-up-box {
   width: 75%;
   margin: 0px auto;
   padding: 30px;
 }
 
-.login-title {
+.sign-up-title {
   display: inline-block;
 }
 
-.login-btn {
+.sign-up-btn {
   margin-right: 20px;
 }
 </style>
