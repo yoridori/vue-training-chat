@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <router-view/>
   </div>
 </template>
@@ -42,6 +42,7 @@ nav {
 
 <script>
 export default {
+  name: 'App',
   components: {
   },
 }
