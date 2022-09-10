@@ -32,6 +32,7 @@
             color="success"
             class="login-btn"
             :disabled="isValid"
+            @click="submit"
           >
             LOGIN
           </v-btn>
@@ -51,6 +52,16 @@
             {{ message }}
           </v-alert>
 
+          <v-alert
+            dense
+            outlined
+            type="error"
+            class="error-message"
+            v-if="errorMessage"
+          >
+            {{ errorMessage }}
+          </v-alert>
+
         </v-form>
       </v-card>
     </div>
@@ -58,6 +69,8 @@
 </template>
 
 <script>
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 export default {
   data: () => ({
     valid: true,
@@ -71,7 +84,8 @@ export default {
       // 二重否定は正確にbooleanの型にする
       v => !!v || 'パスワードを入力してください',
     ],
-    message: ''
+    message: '',
+    errorMessage: '',
   }),
   mounted() {
     if(localStorage.message){
@@ -93,6 +107,24 @@ export default {
     },
     resetValidation() {
       this.$refs.form.resetValidation()
+    },
+    submit() {
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log("user", user)
+          this.$router.push("/")
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("Error!: ", errorCode)
+          console.log("ErrorMessage: ", errorMessage)
+          this.errorMessage = "ログインに失敗しました"
+        });
+
     },
     clear() {
       this.email = ''
@@ -123,6 +155,10 @@ export default {
 }
 
 .success-message {
+  margin-top: 20px;
+}
+
+.error-message {
   margin-top: 20px;
 }
 </style>
