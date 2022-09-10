@@ -49,6 +49,16 @@
             CLEAR
           </v-btn>
 
+          <v-alert
+            dense
+            outlined
+            type="error"
+            class="error-message"
+            v-if="errorMessage"
+          >
+            {{ errorMessage }}
+          </v-alert>
+
         </v-form>
       </v-card>
     </div>
@@ -74,7 +84,9 @@ export default {
     passwordRules: [
       // 二重否定は正確にbooleanの型にする
       v => !!v || 'パスワードを入力してください',
-    ]
+    ],
+    isError: false,
+    errorMessage: '',
   }),
   computed: {
     isValid() {
@@ -92,11 +104,15 @@ export default {
       this.$refs.form.resetValidation()
     },
     submit() {
-      signUp(this.name, this.email, this.password)
+      if (!signUp(this.name, this.email, this.password)) {
+        this.errorMessage = 'ユーザーの新規登録に失敗しました'
+      }
     },
     clear() {
+      this.name = ''
       this.email = ''
       this.password = ''
+      this.errorMessage = ''
     },
   },
 }
@@ -120,5 +136,9 @@ export default {
 
 .sign-up-btn {
   margin-right: 20px;
+}
+
+.error-message {
+  margin-top: 20px;
 }
 </style>
