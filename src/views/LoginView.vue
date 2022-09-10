@@ -41,6 +41,16 @@
             CLEAR
           </v-btn>
 
+          <v-alert
+            dense
+            text
+            type="success"
+            class="success-message"
+            v-if="message"
+          >
+            {{ message }}
+          </v-alert>
+
         </v-form>
       </v-card>
     </div>
@@ -60,8 +70,15 @@ export default {
     passwordRules: [
       // 二重否定は正確にbooleanの型にする
       v => !!v || 'パスワードを入力してください',
-    ]
+    ],
+    message: ''
   }),
+  mounted() {
+    if(localStorage.message){
+      this.message = localStorage.message
+      localStorage.message = ''
+    }
+  },
   computed: {
     isValid() {
       return !this.valid
@@ -103,5 +120,9 @@ export default {
 
 .login-btn {
   margin-right: 20px;
+}
+
+.success-message {
+  margin-top: 20px;
 }
 </style>
