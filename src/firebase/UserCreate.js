@@ -1,16 +1,16 @@
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import router from "@/router";
 
-export  function signUp(userName, email, password) {
+export async function signUp(userName, email, password) {
   let result = false;
   const auth = getAuth();
-   createUserWithEmailAndPassword(auth, email, password)
-    .then(async (userCredential) => {
+  await createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
 
       // Signed in
       console.log("createUserWithEmailAndPassword success", userCredential)
       // TODO promiseの中でpromiseを呼びたくない
-      await updateProfile(userCredential.user, {displayName: userName})
+      updateProfile(userCredential.user, {displayName: userName})
         .then( () => {
           console.log("updateProfile success", auth.currentUser)
         })
@@ -18,8 +18,10 @@ export  function signUp(userName, email, password) {
           console.log("updateProfile fail", error)
         });
 
+      localStorage.message = "新規作成に成功しました"
+
       // TOPにリダイレクト
-      await router.push('/login')
+      router.push('/login')
       result = true
     })
     .catch((error) => {
