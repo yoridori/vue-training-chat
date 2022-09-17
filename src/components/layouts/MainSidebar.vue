@@ -34,7 +34,8 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-list-item>
+      <v-list-item
+          @click="logout">
         <v-list-item-icon>
           <v-icon>
             mdi-logout
@@ -51,6 +52,8 @@
 
 
 <script>
+import { getAuth, signOut } from "firebase/auth";
+
 export default {
   name: 'MainSidebar',
   data: () => ({
@@ -62,6 +65,20 @@ export default {
       ['mdi-alert-octagon', 'Spam', 'about'],
     ],
   }),
+  methods: {
+    logout () {
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        // Sign-out successful.
+        localStorage.message = "ログアウトに成功しました"
+        this.$router.push('/login')
+      }).catch((error) => {
+        // An error happened.
+        console.log(error)
+      });
+
+    }
+  }
 }
 </script>
 
