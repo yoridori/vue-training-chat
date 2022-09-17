@@ -33,6 +33,18 @@
           <v-list-item-title>{{ text }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>
+            mdi-logout
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
     </v-list>
   </v-navigation-drawer>
 </template>

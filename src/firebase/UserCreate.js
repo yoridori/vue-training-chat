@@ -27,5 +27,5 @@ export async function signUp(userName, email, password) {
     .catch((error) => {
       console.log("createUserWithEmailAndPassword fail", error)
     });
-   return result
+  return result
 }
