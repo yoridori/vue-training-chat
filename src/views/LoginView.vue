@@ -2,62 +2,62 @@
   <v-app>
     <div class="login-box">
       <v-card
-        elevation="24"
-        class="login-form"
+          elevation="24"
+          class="login-form"
       >
         <v-card-title class="login-title">Login</v-card-title>
         <v-card-subtitle class="login-subtitle">ユーザー情報をご入力ください</v-card-subtitle>
         <v-btn text color="light-blue" to="signup">新規登録はこちら</v-btn>
         <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
+            ref="form"
+            v-model="valid"
+            lazy-validation
         >
           <v-text-field
-            v-model="email"
-            :rules="emailRules"
-            label="E-mail"
-            required
+              v-model="email"
+              :rules="emailRules"
+              label="E-mail"
+              required
           ></v-text-field>
 
           <v-text-field
-            v-model="password"
-            type="password"
-            :rules="passwordRules"
-            label="Password"
-            required
+              v-model="password"
+              type="password"
+              :rules="passwordRules"
+              label="Password"
+              required
           ></v-text-field>
 
           <v-btn
-            color="success"
-            class="login-btn"
-            :disabled="isValid"
-            @click="submit"
+              color="success"
+              class="login-btn"
+              :disabled="isValid"
+              @click="submit"
           >
             LOGIN
           </v-btn>
 
           <v-btn
-            @click="clear">
+              @click="clear">
             CLEAR
           </v-btn>
 
           <v-alert
-            dense
-            text
-            type="success"
-            class="success-message"
-            v-if="message"
+              dense
+              text
+              type="success"
+              class="success-message"
+              v-if="message"
           >
             {{ message }}
           </v-alert>
 
           <v-alert
-            dense
-            outlined
-            type="error"
-            class="error-message"
-            v-if="errorMessage"
+              dense
+              outlined
+              type="error"
+              class="error-message"
+              v-if="errorMessage"
           >
             {{ errorMessage }}
           </v-alert>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 
 export default {
   data: () => ({
@@ -88,7 +88,7 @@ export default {
     errorMessage: '',
   }),
   mounted() {
-    if(localStorage.message){
+    if (localStorage.message) {
       this.message = localStorage.message
       localStorage.message = ''
     }
@@ -111,28 +111,28 @@ export default {
     submit() {
       const auth = getAuth();
       signInWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log("user", user)
-          const auth = {
-            displayName: user.displayName,
-            email: user.email,
-            uid: user.uid,
-            refreshToken: user.refreshToken
-          }
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log("user", user)
+            const auth = {
+              displayName: user.displayName,
+              email: user.email,
+              uid: user.uid,
+              refreshToken: user.refreshToken
+            }
 
-          sessionStorage.setItem('user', JSON.stringify(auth))
+            sessionStorage.setItem('user', JSON.stringify(auth))
 
-          this.$router.push("/")
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log("Error!: ", errorCode)
-          console.log("ErrorMessage: ", errorMessage)
-          this.errorMessage = "ログインに失敗しました"
-        });
+            this.$router.push("/")
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log("Error!: ", errorCode)
+            console.log("ErrorMessage: ", errorMessage)
+            this.errorMessage = "ログインに失敗しました"
+          });
 
     },
     clear() {

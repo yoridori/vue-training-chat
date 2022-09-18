@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {createUserWithEmailAndPassword, getAuth, updateProfile} from "firebase/auth";
 import router from "@/router";
 
 export async function signUp(userName, email, password) {
@@ -11,7 +11,7 @@ export async function signUp(userName, email, password) {
       console.log("createUserWithEmailAndPassword success", userCredential)
       // TODO promiseの中でpromiseを呼びたくない
       updateProfile(userCredential.user, {displayName: userName})
-        .then( () => {
+        .then(() => {
           console.log("updateProfile success", auth.currentUser)
         })
         .catch((error) => {

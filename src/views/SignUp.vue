@@ -2,59 +2,59 @@
   <v-app>
     <div class="sign-up-box">
       <v-card
-        elevation="24"
-        class="sign-up-form"
+          elevation="24"
+          class="sign-up-form"
       >
         <v-card-title class="sign-up-title">SignUp</v-card-title>
         <v-card-subtitle class="sign-up-subtitle">ユーザー情報をご入力ください</v-card-subtitle>
         <v-btn text color="light-blue" to="login">ログインはこちら</v-btn>
         <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
+            ref="form"
+            v-model="valid"
+            lazy-validation
         >
           <v-text-field
-            v-model="name"
-            :rules="nameRules"
-            label="UserName"
-            required
+              v-model="name"
+              :rules="nameRules"
+              label="UserName"
+              required
           ></v-text-field>
 
           <v-text-field
-            v-model="email"
-            :rules="emailRules"
-            label="E-mail"
-            required
+              v-model="email"
+              :rules="emailRules"
+              label="E-mail"
+              required
           ></v-text-field>
 
           <v-text-field
-            v-model="password"
-            type="password"
-            :rules="passwordRules"
-            label="Password"
-            required
+              v-model="password"
+              type="password"
+              :rules="passwordRules"
+              label="Password"
+              required
           ></v-text-field>
 
           <v-btn
-            color="success"
-            class="sign-up-btn"
-            @click="submit"
-            :disabled="isValid"
+              color="success"
+              class="sign-up-btn"
+              @click="submit"
+              :disabled="isValid"
           >
             SIGN UP
           </v-btn>
 
           <v-btn
-            @click="clear">
+              @click="clear">
             CLEAR
           </v-btn>
 
           <v-alert
-            dense
-            outlined
-            type="error"
-            class="error-message"
-            v-if="errorMessage"
+              dense
+              outlined
+              type="error"
+              class="error-message"
+              v-if="errorMessage"
           >
             {{ errorMessage }}
           </v-alert>
@@ -67,6 +67,7 @@
 
 <script>
 import {signUp} from "@/firebase/UserCreate";
+
 export default {
   data: () => ({
     valid: true,

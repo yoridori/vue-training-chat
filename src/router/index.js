@@ -7,6 +7,7 @@ import AboutView from "@/views/AboutView";
 import ChatBoard from "@/views/ChatBoard";
 import LoginView from "@/views/LoginView";
 import SignUp from "@/views/SignUp";
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -15,7 +16,7 @@ const routes = [
     name: 'UserList',
     component: UserList,
     // メタフィールド
-    meta: { requiresAuth: true },
+    meta: {requiresAuth: true},
   },
   {
     path: '/about',
@@ -55,7 +56,7 @@ router.beforeEach((to, from, next) => {
     if (!user) {
       next({
         path: '/login',
-        query: { redirect: to.fullPath }
+        query: {redirect: to.fullPath}
       })
     } else {
       next()

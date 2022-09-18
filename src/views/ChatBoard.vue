@@ -25,7 +25,7 @@
                     </v-list-item-avatar>
 
                     <v-list-item-content>
-<!--                      <v-list-item-title>Message {{ n }}</v-list-item-title>-->
+                      <!--                      <v-list-item-title>Message {{ n }}</v-list-item-title>-->
 
                       <v-list-item-subtitle class="message">
                         {{ data.message }}
@@ -68,8 +68,9 @@
 </template>
 
 <script>
-import { getFirebaseData } from "@/firebase/Db";
+import {getFirebaseData} from "@/firebase/Db";
 import MainSidebar from "@/components/layouts/MainSidebar";
+
 export default {
   components: {
     MainSidebar,
@@ -85,8 +86,7 @@ export default {
     })
   },
   data: () => ({
-    messages: [
-    ],
+    messages: [],
     body: '',
     user_id: '',
     cards: ['Today'],
@@ -99,20 +99,20 @@ export default {
     ],
   }),
   computed: {
-    invalid () {
+    invalid() {
       console.log('computed, invalid')
-      if(!this.body) {
+      if (!this.body) {
         return true
       }
       return false
     }
   },
   methods: {
-    clear () {
+    clear() {
       console.log("clear call")
-      this.body=""
+      this.body = ""
     },
-    submit () {
+    submit() {
       console.log("submit call", this.body)
       this.messages.unshift({message: this.body})
       this.body = ""

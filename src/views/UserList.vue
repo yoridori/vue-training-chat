@@ -37,6 +37,7 @@
 
 <script>
 import MainSidebar from "@/components/layouts/MainSidebar";
+
 export default {
   name: 'UserList',
   components: {
