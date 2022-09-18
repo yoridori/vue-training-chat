@@ -7,13 +7,19 @@
         color="grey lighten-4"
         class="pa-4"
     >
-      <v-avatar
-          class="mb-4"
-          color="grey darken-1"
-          size="64"
-      ></v-avatar>
+      <v-avatar color="indigo">
+        <input
+            type="file"
+            ref="fileInput"
+            accept="image/jpeg, image/jpg, image/png"
+            style="display: none">
+        <v-icon dark
+                @click="changeIcon">
+          mdi-account-circle
+        </v-icon>
+      </v-avatar>
 
-      <div class="username">{{ auth && auth.displayName}}</div>
+      <div class="username">{{ auth && auth.displayName }}</div>
     </v-sheet>
 
     <v-divider></v-divider>
@@ -52,7 +58,7 @@
 
 
 <script>
-import { getAuth, signOut } from "firebase/auth";
+import {getAuth, signOut} from "firebase/auth";
 
 export default {
   name: 'MainSidebar',
@@ -71,7 +77,7 @@ export default {
     auth: null,
   }),
   methods: {
-    logout () {
+    logout() {
       const auth = getAuth();
       signOut(auth).then(() => {
         // Sign-out successful.
@@ -83,7 +89,10 @@ export default {
         console.log(error)
       });
 
-    }
+    },
+    changeIcon() {
+      this.$refs.fileInput.click()
+    },
   }
 }
 </script>
