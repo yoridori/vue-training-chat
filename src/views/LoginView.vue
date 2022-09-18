@@ -115,6 +115,15 @@ export default {
           // Signed in
           const user = userCredential.user;
           console.log("user", user)
+          const auth = {
+            displayName: user.displayName,
+            email: user.email,
+            uid: user.uid,
+            refreshToken: user.refreshToken
+          }
+
+          sessionStorage.setItem('user', JSON.stringify(auth))
+
           this.$router.push("/")
         })
         .catch((error) => {

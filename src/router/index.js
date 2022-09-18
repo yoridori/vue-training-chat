@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import HomeView from '../views/HomeView.vue'
 import UserList from "@/views/UserList";
 import AboutView from "@/views/AboutView";
@@ -51,17 +51,26 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   if (requiresAuth) {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        next({
-          path: '/login',
-          query: { redirect: to.fullPath }
-        })
-      } else {
-        next()
-      }
-    })
+    const user = sessionStorage.getItem('user')
+    if (!user) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+    // const auth = getAuth();
+    // onAuthStateChanged(auth, (user) => {
+    //   if (!user) {
+    //     next({
+    //       path: '/login',
+    //       query: { redirect: to.fullPath }
+    //     })
+    //   } else {
+    //     next()
+    //   }
+    // })
   } else {
     next() // next() を常に呼び出すようにしてください!
   }
