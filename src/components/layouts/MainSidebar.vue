@@ -16,9 +16,15 @@
             @change="updateIcon"
         >
         <v-icon dark
+                v-if="!photoUrl"
                 @click="changeIcon">
           mdi-account-circle
         </v-icon>
+
+        <img :src="photoUrl"
+             alt=""
+             @click="changeIcon"
+             v-if="photoUrl">
       </v-avatar>
 
       <div class="username">{{ auth && auth.displayName }}</div>
@@ -60,13 +66,14 @@
 
 
 <script>
-import {getAuth, onAuthStateChanged, signOut} from "firebase/auth";
-import {getStorage, ref, uploadBytes} from "firebase/storage";
+import {getAuth, onAuthStateChanged, signOut, updateProfile} from "firebase/auth";
+import {getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage";
 
 export default {
   name: 'MainSidebar',
   mounted() {
     this.auth = JSON.parse(sessionStorage.getItem('user'))
+    this.photoUrl = this.auth.photoURL
 
   },
   data: () => ({
@@ -78,6 +85,7 @@ export default {
       ['mdi-alert-octagon', 'Spam', 'about'],
     ],
     auth: null,
+    photoUrl: ''
   }),
   methods: {
     logout() {
@@ -85,7 +93,7 @@ export default {
       signOut(auth).then(() => {
         // Sign-out successful.
         localStorage.message = "ログアウトに成功しました"
-        sessionStorage.setItem('user', '')
+        sessionStorage.removeItem('user')
         this.$router.push('/login')
       }).catch((error) => {
         // An error happened.
@@ -118,9 +126,24 @@ export default {
       uploadBytes(storageRef, file).then((snapshot) => {
         console.log('Uploaded a blob or file!');
         console.log(snapshot);
+
+        getDownloadURL(snapshot.ref).then((url) => {
+          console.log('url: ' + url)
+          const auth = getAuth()
+          onAuthStateChanged(auth, (user) => {
+            updateProfile(user, {
+              photoURL: url
+            })
+
+            this.auth.photoURL = url
+            sessionStorage.setItem('user', JSON.stringify(this.auth))
+            this.photoUrl = url
+          })
+
+        }).catch((error) => {
+          console.log('getDownloadURL error: ' + error)
+        })
       });
-
-
     },
     getAuth() {
       const auth = getAuth();

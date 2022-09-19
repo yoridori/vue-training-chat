@@ -118,8 +118,9 @@ export default {
             const auth = {
               displayName: user.displayName,
               email: user.email,
-              uid: user.uid,
-              refreshToken: user.refreshToken
+              localId: user.uid,
+              refreshToken: user.refreshToken,
+              photoURL: user.photoURL,
             }
 
             sessionStorage.setItem('user', JSON.stringify(auth))
