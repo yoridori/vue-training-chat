@@ -12,7 +12,9 @@
             type="file"
             ref="fileInput"
             accept="image/jpeg, image/jpg, image/png"
-            style="display: none">
+            style="display: none"
+            @change="updateIcon"
+        >
         <v-icon dark
                 @click="changeIcon">
           mdi-account-circle
@@ -58,7 +60,8 @@
 
 
 <script>
-import {getAuth, signOut} from "firebase/auth";
+import {getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import {getStorage, ref, uploadBytes} from "firebase/storage";
 
 export default {
   name: 'MainSidebar',
@@ -93,6 +96,39 @@ export default {
     changeIcon() {
       this.$refs.fileInput.click()
     },
+    updateIcon() {
+      const user = this.getAuth()
+      console.log(user)
+      if (!user) {
+        console.log("logout?")
+        sessionStorage.removeItem('user')
+        this.$router.push('/login')
+      }
+
+      const file = this.$refs.fileInput.files[0]
+      const filePath = `/user/${file.name}`
+      console.log(file)
+      console.log(filePath)
+
+      const storage = getStorage();
+      console.log(storage)
+      const storageRef = ref(storage, filePath);
+      console.log(storageRef)
+
+      uploadBytes(storageRef, file).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        console.log(snapshot);
+      });
+
+
+    },
+    getAuth() {
+      const auth = getAuth();
+      console.log(auth)
+      return onAuthStateChanged(auth, (user) => {
+        return user
+      })
+    }
   }
 }
 </script>
