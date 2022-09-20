@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import HomeView from '../views/HomeView.vue'
-import UserList from "@/views/UserList";
+import RoomList from "@/views/RoomList";
 import AboutView from "@/views/AboutView";
 import ChatBoard from "@/views/ChatBoard";
 import LoginView from "@/views/LoginView";
@@ -13,8 +13,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'UserList',
-    component: UserList,
+    name: 'RoomList',
+    component: RoomList,
     // メタフィールド
     meta: {requiresAuth: true},
   },
