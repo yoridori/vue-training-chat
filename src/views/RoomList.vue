@@ -37,11 +37,26 @@
 
 <script>
 import MainSidebar from "@/components/layouts/MainSidebar";
+import {collection, getDocs} from "firebase/firestore";
+import {db} from "@/firebase/Db";
 
 export default {
   name: 'RoomList',
   components: {
     MainSidebar,
-  }
+  },
+  mounted() {
+    this.getRooms()
+  },
+  methods: {
+    async getRooms() {
+      console.log("getRooms call")
+
+      const querySnapshot = await getDocs(collection(db, "rooms"));
+      querySnapshot.forEach(doc => {
+        console.log(doc.id, " => ", doc.data().name);
+      });
+    },
+  },
 }
 </script>
