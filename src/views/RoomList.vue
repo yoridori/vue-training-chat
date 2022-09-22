@@ -6,7 +6,7 @@
         shrink-on-scroll
     >
       <v-toolbar-title>ルーム一覧</v-toolbar-title>
-
+      <CreateRoom/>
       <v-spacer></v-spacer>
 
       <v-btn icon>
@@ -60,6 +60,7 @@
 
 <script>
 import MainSidebar from "@/components/layouts/MainSidebar";
+import CreateRoom from "@/components/modal/CreateRoom";
 import {collection, getDocs} from "firebase/firestore";
 import {db} from "@/firebase/Db";
 
@@ -67,6 +68,7 @@ export default {
   name: 'RoomList',
   components: {
     MainSidebar,
+    CreateRoom,
   },
   data: () => ({
     rooms: [],
