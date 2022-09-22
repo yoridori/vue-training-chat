@@ -18,17 +18,40 @@
       <v-container>
         <v-row>
           <v-col
-              v-for="n in 24"
-              :key="n"
+              v-for="room in rooms"
+              :key="room.id"
               cols="4"
           >
-            <router-link :to="{ path: '/chat', query: { user_id: n }}">
+            <router-link :to="{ path: '/chat', query: { room_id: room.id }}">
               <v-avatar
                   color="grey lighten-2"
                   size="128"
-              ></v-avatar>
+              >
+                <img
+                    src="https://cdn.vuetifyjs.com/images/john.jpg"
+                    alt="John"
+                    v-if="!room.thumbnailUrl"
+                >
+                <img
+                    :src="room.thumbnailUrl"
+                    alt="John"
+                    v-if="room.thumbnailUrl"
+                >
+              </v-avatar>
             </router-link>
           </v-col>
+          <!--          <v-col
+                        v-for="n in 24"
+                        :key="n"
+                        cols="4"
+                    >
+                      <router-link :to="{ path: '/chat', query: { user_id: n }}">
+                        <v-avatar
+                            color="grey lighten-2"
+                            size="128"
+                        ></v-avatar>
+                      </router-link>
+                    </v-col>-->
         </v-row>
       </v-container>
     </v-main>
@@ -45,16 +68,20 @@ export default {
   components: {
     MainSidebar,
   },
+  data: () => ({
+    rooms: [],
+  }),
   mounted() {
     this.getRooms()
   },
   methods: {
     async getRooms() {
       console.log("getRooms call")
-
+      this.rooms = []
       const querySnapshot = await getDocs(collection(db, "rooms"));
       querySnapshot.forEach(doc => {
         console.log(doc.id, " => ", doc.data().name);
+        this.rooms.push(doc.data())
       });
     },
   },
