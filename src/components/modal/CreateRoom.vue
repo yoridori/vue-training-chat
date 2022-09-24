@@ -24,6 +24,7 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
+                    v-model="name"
                     label="Room Name*"
                     required
                 ></v-text-field>
@@ -31,6 +32,7 @@
               <v-col cols="12">
                 <template>
                   <v-file-input
+                      v-model="file"
                       truncate-length="15"
                       accept="image/jpeg, image/jpg, image/png"
                       label="File input"
@@ -53,7 +55,7 @@
           <v-btn
               color="blue darken-1"
               text
-              @click="dialog = false"
+              @click="onSubmit"
           >
             Save
           </v-btn>
@@ -64,9 +66,48 @@
 </template>
 
 <script>
+import {getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage";
+import {addDoc, collection, Timestamp} from "firebase/firestore";
+import {db} from "@/firebase/Db";
+
 export default {
   data: () => ({
     dialog: false,
+    name: "",
+    file: null,
   }),
+  methods: {
+    async onSubmit() {
+      console.log("onSubmit called", this.name, this.file)
+      let thumbnailUrl = ''
+      if (this.file) {
+        const filePath = `/room/${this.file.name}`
+        thumbnailUrl = await uploadBytes(ref(getStorage(), filePath), this.file).then((snapshot) => {
+          console.log('Uploaded a blob or file!');
+          console.log(snapshot);
+
+          return getDownloadURL(snapshot.ref).then((url) => {
+            console.log('url: ' + url)
+            return url
+
+          }).catch((error) => {
+            console.log('getDownloadURL error: ' + error)
+            return ""
+          })
+        })
+      }
+      console.log(`thumbnailUrl: ${thumbnailUrl}`)
+      const collect = collection(db, "rooms")
+      await addDoc(collect, {
+        name: this.name,
+        thumbnailUrl: thumbnailUrl,
+        createdAt: Timestamp.now(),
+      }).then(result => {
+        console.log(`success to create room ${result}`)
+        this.dialog = false
+      })
+
+    }
+  }
 }
 </script>
