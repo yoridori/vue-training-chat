@@ -82,8 +82,16 @@ export default {
       this.rooms = []
       const querySnapshot = await getDocs(collection(db, "rooms"));
       querySnapshot.forEach(doc => {
-        console.log(doc.id, " => ", doc.data().name);
-        this.rooms.push(doc.data())
+        // const data = {
+        //   name: doc.data().name,
+        //   thumbnailUrl: doc.data().thumbnailUrl,
+        //   createdAt: doc.data().createdAt,
+        // }
+        // ↓ の書き方と同じになる
+        const data = {...doc.data()}
+        data.id = doc.id
+        console.log(data);
+        this.rooms.push(data)
       });
     },
   },
