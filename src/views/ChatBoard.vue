@@ -72,7 +72,7 @@
 <script>
 import {db} from "@/firebase/Db";
 import MainSidebar from "@/components/layouts/MainSidebar";
-import {addDoc, collection, doc, getDoc, getDocs, orderBy, query, Timestamp} from "firebase/firestore";
+import {addDoc, collection, doc, getDoc, onSnapshot, orderBy, query, Timestamp} from "firebase/firestore";
 
 export default {
   components: {
@@ -91,21 +91,30 @@ export default {
     }
     this.room = roomDoc.data()
     console.log("Document data:", this.room);
-
-    // メッセージを取得
-    const messagesRef = collection(roomRef, 'messages')
-    const snapshot = await getDocs(query(messagesRef, orderBy('createdAt', 'asc')))
-    // snapshot.forEach(doc => {
-    //   console.log(doc)
-    // })
-    snapshot.docs.map(doc => {
-      console.log(doc.data())
-      this.messages.push(doc.data())
-    })
   },
-  mounted() {
+  async mounted() {
     this.auth = JSON.parse(sessionStorage.getItem('user'))
     console.log(`auth: ${this.auth}`)
+
+    const roomRef = doc(db, 'rooms', this.room_id)
+    const messagesRef = collection(roomRef, 'messages')
+    const q = query(messagesRef, orderBy('createdAt', 'asc'))
+    onSnapshot(q, snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type === "added") {
+          console.log("New city: ", change.doc.data());
+          const data = {...change.doc.data()}
+          this.messages.push(data)
+        }
+        if (change.type === "modified") {
+          console.log("Modified city: ", change.doc.data());
+        }
+        if (change.type === "removed") {
+          console.log("Removed city: ", change.doc.data());
+        }
+      })
+
+    })
   },
   data: () => ({
     messages: [],
@@ -138,12 +147,6 @@ export default {
     },
     async submit() {
       console.log("submit call", this.body)
-      this.messages.push({
-        message: this.body,
-        name: this.auth.displayName,
-        photoUrl: this.auth.photoURL,
-        createdAt: Timestamp.now(),
-      })
 
       const roomRef = doc(db, 'rooms', this.room_id)
       await addDoc(collection(roomRef, 'messages'), {
