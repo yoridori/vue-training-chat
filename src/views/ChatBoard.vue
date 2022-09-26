@@ -72,7 +72,7 @@
 <script>
 import {db} from "@/firebase/Db";
 import MainSidebar from "@/components/layouts/MainSidebar";
-import {collection, doc, getDoc, getDocs, orderBy, query, Timestamp} from "firebase/firestore";
+import {addDoc, collection, doc, getDoc, getDocs, orderBy, query, Timestamp} from "firebase/firestore";
 
 export default {
   components: {
@@ -94,7 +94,7 @@ export default {
 
     // メッセージを取得
     const messagesRef = collection(roomRef, 'messages')
-    const snapshot = await getDocs(query(messagesRef, orderBy('createdAt')))
+    const snapshot = await getDocs(query(messagesRef, orderBy('createdAt', 'asc')))
     // snapshot.forEach(doc => {
     //   console.log(doc)
     // })
@@ -136,15 +136,30 @@ export default {
       console.log("clear call")
       this.body = ""
     },
-    submit() {
+    async submit() {
       console.log("submit call", this.body)
-      this.messages.unshift({
+      this.messages.push({
         message: this.body,
         name: this.auth.displayName,
         photoUrl: this.auth.photoURL,
         createdAt: Timestamp.now(),
       })
-      this.body = ""
+
+      const roomRef = doc(db, 'rooms', this.room_id)
+      await addDoc(collection(roomRef, 'messages'), {
+        message: this.body,
+        name: this.auth.displayName,
+        photoUrl: this.auth.photoURL,
+        createdAt: Timestamp.now(),
+      }).then(result => {
+        console.log(`success. data: ${result}`)
+        this.body = ''
+      }).catch(error => {
+        console.log(`fail. data: ${error}`)
+        alert('メッセージの送信に失敗しました')
+      })
+
+
     }
   },
 }
