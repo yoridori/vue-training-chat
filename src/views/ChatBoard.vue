@@ -68,17 +68,30 @@
 </template>
 
 <script>
-import {getFirebaseData} from "@/firebase/Db";
+import {db, getFirebaseData} from "@/firebase/Db";
 import MainSidebar from "@/components/layouts/MainSidebar";
+import {doc, getDoc} from "firebase/firestore";
 
 export default {
   components: {
     MainSidebar,
   },
   async created() {
-    this.user_id = this.$route.query.user_id
-    console.log("user_id: " + this.user_id)
+    this.room_id = this.$route.query.room_id
+    console.log("room_id: " + this.room_id)
+
+    const roomRef = doc(db, 'rooms', this.room_id)
+    const docSnap = await getDoc(roomRef)
+
+    if (!docSnap.exists()) {
+      console.log("No such document!");
+      await this.$router.push('/')
+    }
+    console.log("Document data:", docSnap.data());
+
+
     const querySnapshot = await getFirebaseData("chats")
+
     querySnapshot.forEach((doc) => {
 
       console.log("doc", doc.data())
@@ -88,7 +101,7 @@ export default {
   data: () => ({
     messages: [],
     body: '',
-    user_id: '',
+    room_id: '',
     cards: ['Today'],
     drawer: null,
     links: [
