@@ -2,6 +2,7 @@
   <v-app id="inspire">
     <MainSidebar/>
     <v-main>
+      <h1>{{ room ? room.name : "" }}</h1>
       <v-container
           class="py-8 px-6"
           fluid
@@ -68,9 +69,9 @@
 </template>
 
 <script>
-import {db, getFirebaseData} from "@/firebase/Db";
+import {db} from "@/firebase/Db";
 import MainSidebar from "@/components/layouts/MainSidebar";
-import {doc, getDoc} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, orderBy, query} from "firebase/firestore";
 
 export default {
   components: {
@@ -81,20 +82,23 @@ export default {
     console.log("room_id: " + this.room_id)
 
     const roomRef = doc(db, 'rooms', this.room_id)
-    const docSnap = await getDoc(roomRef)
+    const roomDoc = await getDoc(roomRef)
 
-    if (!docSnap.exists()) {
+    if (!roomDoc.exists()) {
       console.log("No such document!");
       await this.$router.push('/')
     }
-    console.log("Document data:", docSnap.data());
+    this.room = roomDoc.data()
+    console.log("Document data:", this.room);
 
-
-    const querySnapshot = await getFirebaseData("chats")
-
-    querySnapshot.forEach((doc) => {
-
-      console.log("doc", doc.data())
+    // メッセージを取得
+    const messagesRef = collection(roomRef, 'messages')
+    const snapshot = await getDocs(query(messagesRef, orderBy('createdAt')))
+    // snapshot.forEach(doc => {
+    //   console.log(doc)
+    // })
+    snapshot.docs.map(doc => {
+      console.log(doc.data())
       this.messages.push(doc.data())
     })
   },
@@ -102,6 +106,7 @@ export default {
     messages: [],
     body: '',
     room_id: '',
+    room: null,
     cards: ['Today'],
     drawer: null,
     links: [
