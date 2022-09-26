@@ -23,6 +23,7 @@
                       :key="index"
                   >
                     <v-list-item-avatar color="grey darken-1">
+                      <v-img :src="data.photoUrl"></v-img>
                     </v-list-item-avatar>
 
                     <v-list-item-content>
@@ -71,7 +72,7 @@
 <script>
 import {db} from "@/firebase/Db";
 import MainSidebar from "@/components/layouts/MainSidebar";
-import {collection, doc, getDoc, getDocs, orderBy, query} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, orderBy, query, Timestamp} from "firebase/firestore";
 
 export default {
   components: {
@@ -102,6 +103,10 @@ export default {
       this.messages.push(doc.data())
     })
   },
+  mounted() {
+    this.auth = JSON.parse(sessionStorage.getItem('user'))
+    console.log(`auth: ${this.auth}`)
+  },
   data: () => ({
     messages: [],
     body: '',
@@ -115,6 +120,7 @@ export default {
       ['mdi-delete', 'Trash'],
       ['mdi-alert-octagon', 'Spam'],
     ],
+    auth: null,
   }),
   computed: {
     invalid() {
@@ -132,7 +138,12 @@ export default {
     },
     submit() {
       console.log("submit call", this.body)
-      this.messages.unshift({message: this.body})
+      this.messages.unshift({
+        message: this.body,
+        name: this.auth.displayName,
+        photoUrl: this.auth.photoURL,
+        createdAt: Timestamp.now(),
+      })
       this.body = ""
     }
   },
